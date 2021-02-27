@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": ".",
+    "typeRoots": ["node_modules/@types/"]
+  },
+  "exclude": ["node_modules"],
+  "include": ["index.ts"]
+}
