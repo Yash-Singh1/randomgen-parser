@@ -2,6 +2,12 @@
 
 Parses RandomGen
 
+## Installation
+
+```sh
+npm install randomgen-parser
+```
+
 ## API
 
 Importing:
