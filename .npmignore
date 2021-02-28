@@ -1,4 +1,3 @@
 .github/
 .prettierrc.json
-!index.js
 index.ts
