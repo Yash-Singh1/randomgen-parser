@@ -132,7 +132,7 @@ ParsingError.prototype = Error.prototype;
 
 class RandomGenParser {
   string: string;
-  parsed: Object[];
+  parsed: ParsingResult;
 
   /**
    * Constructor for the parser
