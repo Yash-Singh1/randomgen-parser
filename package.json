@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepublish": "npm run build",
-    "build": "tsc index.ts --downlevelIteration && prettier --write index.js"
+    "build": "tsc index.ts --downlevelIteration && prettier --write ."
   },
   "keywords": [
     "randomgen",
