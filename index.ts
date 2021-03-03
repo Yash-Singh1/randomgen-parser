@@ -160,7 +160,16 @@ class RandomGenParser {
     let beforeLinebreak: afterLinebreak = null;
     splitted.forEach((line, lineNum) => {
       pos += line.length;
-      let afterLinebreak: afterLinebreak = Object.values(this.linebreakTypes).find((value) => this.string.slice(pos).startsWith(value)) || null;
+      let afterLinebreak: afterLinebreak = Object.values(this.linebreakTypes)
+        .map((type) => {
+          if (typeof type === 'string') {
+            return { matches: line.slice(pos).startsWith(type), value: type };
+          } else {
+            let value = type.exec(line.slice(pos))[0];
+            return { matches: value !== null, value };
+          }
+        })
+        .filter((type) => type.matches === true)[0].value;
       if (afterLinebreak !== null) {
         pos += afterLinebreak.length;
       }
@@ -336,7 +345,8 @@ class RandomGenParser {
     'crlf': '\r\n',
     'cr+lf': '\r\n',
     'lf': '\n',
-    'cr': '\r'
+    'cr': '\r',
+    'auto': /\r\n|\r|\n/
   };
 
   private newlineObject: Omit<newlineToken, 'afterLinebreak' | 'pos'> = {
