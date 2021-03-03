@@ -1,6 +1,6 @@
 {
   "name": "randomgen-parser",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Parse RandomGen programs",
   "main": "index.js",
   "scripts": {
