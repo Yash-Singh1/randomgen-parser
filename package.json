@@ -4,7 +4,7 @@
   "description": "Parse RandomGen programs",
   "main": "index.js",
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublishOnly": "npm run build",
     "build": "tsc index.ts --downlevelIteration && prettier --write ."
   },
   "keywords": [
