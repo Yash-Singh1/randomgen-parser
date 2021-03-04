@@ -160,16 +160,18 @@ class RandomGenParser {
     let beforeLinebreak: afterLinebreak = null;
     splitted.forEach((line, lineNum) => {
       pos += line.length;
-      let afterLinebreak: afterLinebreak = Object.values(this.linebreakTypes)
-        .map((type) => {
-          if (typeof type === 'string') {
-            return { matches: line.slice(pos).startsWith(type), value: type };
-          } else {
-            let value = type.exec(line.slice(pos))[0];
-            return { matches: value !== null, value };
-          }
-        })
-        .filter((type) => type.matches === true)[0].value;
+      let afterLinebreak: afterLinebreak = (
+        Object.values(this.linebreakTypes)
+          .map((type) => {
+            if (typeof type === 'string') {
+              return { matches: line.slice(pos).startsWith(type), value: type };
+            } else {
+              let value = type.exec(line.slice(pos));
+              return { matches: value !== null, value: value ? value[0] : null };
+            }
+          })
+          .filter((type) => type.matches === true)[0] || { value: null }
+      ).value;
       if (afterLinebreak !== null) {
         pos += afterLinebreak.length;
       }
