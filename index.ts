@@ -200,13 +200,13 @@ class RandomGenParser {
         return;
       }
       if (line === '') {
-        parsingResult.push(Object.assign(this.newlineObject, { pos: { line: lineNum + 1, column: 0 }, afterLinebreak }));
         if (inList === true) {
           inList = false;
           currentList.afterLinebreak = beforeLinebreak;
           parsingResult.push(currentList);
           currentList = null;
         }
+        parsingResult.push(Object.assign(this.newlineObject, { pos: { line: lineNum + 1, column: 0 }, afterLinebreak }));
       } else if (this.isLineComment(line)) {
         let lineCommentValue: string = this.getLineCommentValue(line);
         let commentInfo: comment = {
