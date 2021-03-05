@@ -598,7 +598,7 @@ class RandomGenParser {
   private isAttribute(object: string) {
     return object.includes(this.attributeSeperator);
   }
-  private getKeyAndValue(object: string, lineNum: number, column: number): [string, listElement] {
+  private getKeyAndValue(object: string, lineNum: number, column: number): [string, Omit<listElement, 'afterLinebreak'>] {
     return [
       object.split(this.attributeSeperator)[0],
       this.parseElement(
@@ -612,7 +612,7 @@ class RandomGenParser {
   private convertToStringOfAnElement(string: string, lineNum: number, column: number): stringOfAnElement {
     return { type: 'string', raw: string, stringValue: string, interpretedValue: string, pos: { line: lineNum, column } };
   }
-  private parseElement(line: string, lineNum: number, inObject: boolean = false, column: number = null): listElement {
+  private parseElement(line: string, lineNum: number, inObject: boolean = false, column: number = null): Omit<listElement, 'afterLinebreak'> {
     let saved_line: string = line.slice();
     let chance: 'default' | number | undefined = !inObject ? 'default' : undefined;
     let attributes: Object | undefined = !inObject ? {} : undefined;
@@ -771,8 +771,7 @@ class RandomGenParser {
       attributes,
       stringValue: line.trim(),
       interpretedValue,
-      pos: { line: lineNum, column: column },
-      afterLinebreak: null
+      pos: { line: lineNum, column: column }
     };
   }
 
