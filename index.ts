@@ -216,7 +216,7 @@ class RandomGenParser {
           raw: line,
           pos: {
             line: lineNum + 1,
-            column: null
+            column: this.getBeginningWhitespace(line).length + this.lineCommentStart.length
           },
           afterLinebreak
         };
