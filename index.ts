@@ -200,7 +200,7 @@ class RandomGenParser {
         return;
       }
       if (line === '') {
-        parsingResult.push(Object.assign(this.newlineObject, { pos: { line: lineNum + 1, column: null }, afterLinebreak }));
+        parsingResult.push(Object.assign(this.newlineObject, { pos: { line: lineNum + 1, column: 0 }, afterLinebreak }));
         if (inList === true) {
           inList = false;
           currentList.afterLinebreak = beforeLinebreak;
