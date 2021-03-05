@@ -164,9 +164,9 @@ class RandomGenParser {
         Object.values(this.linebreakTypes)
           .map((type) => {
             if (typeof type === 'string') {
-              return { matches: line.slice(pos).startsWith(type), value: type };
+              return { matches: this.string.slice(pos).startsWith(type), value: type };
             } else {
-              let value = type.exec(line.slice(pos));
+              let value = type.exec(this.string.slice(pos));
               return { matches: value !== null, value: value ? value[0] : null };
             }
           })
@@ -183,11 +183,18 @@ class RandomGenParser {
           currentBlockComments.interpretedValue = currentBlockComments.stringValue;
           currentBlockComments.afterLinebreak = afterLinebreak;
           currentBlockComments.pos.line[1] = lineNum + 1;
-          parsingResult.push(currentBlockComments);
+          if (inList === true) {
+            currentList.interpretedValue.push(currentBlockComments);
+            currentList.stringValue += currentBlockComments.raw;
+          } else {
+            parsingResult.push(currentBlockComments);
+          }
           currentBlockComments = Object.assign({}, this.defaultBlockComments);
         } else {
-          currentBlockComments.raw += line + (afterLinebreak || '');
-          currentBlockComments.stringValue += line + (afterLinebreak || '');
+          currentBlockComments.stringValue += line;
+          currentBlockComments.stringValue += afterLinebreak || '';
+          currentBlockComments.raw += line;
+          currentBlockComments.raw += afterLinebreak || '';
           currentBlockComments.interpretedValue = currentBlockComments.stringValue;
         }
         return;
@@ -202,7 +209,7 @@ class RandomGenParser {
         }
       } else if (this.isLineComment(line)) {
         let lineCommentValue: string = this.getLineCommentValue(line);
-        parsingResult.push({
+        let commentInfo: comment = {
           ...this.singleLineCommentTemplate,
           stringValue: lineCommentValue,
           interpretedValue: lineCommentValue,
@@ -212,11 +219,21 @@ class RandomGenParser {
             column: null
           },
           afterLinebreak
-        });
+        };
+        if (inList === true) {
+          currentList.interpretedValue.push(commentInfo);
+          currentList.raw += commentInfo.raw;
+          currentList.raw += afterLinebreak || '';
+          currentList.stringValue = currentList.raw;
+        } else {
+          parsingResult.push(commentInfo);
+        }
       } else if (this.isBlockCommentStart(line)) {
         commenting = true;
-        currentBlockComments.raw += line + (afterLinebreak || '');
-        currentBlockComments.stringValue += line.trim().slice(2) + (afterLinebreak || '');
+        currentBlockComments.raw += line;
+        currentBlockComments.raw += afterLinebreak || '';
+        currentBlockComments.stringValue += line.trim().slice(2);
+        currentBlockComments.stringValue += afterLinebreak || '';
         currentBlockComments.interpretedValue = currentBlockComments.stringValue;
         currentBlockComments.pos.line[0] = lineNum + 1;
       } else if (this.isSetting(line)) {
@@ -229,14 +246,22 @@ class RandomGenParser {
         }
       } else if (this.isNote(line)) {
         let noteValue: string = this.getNote(line);
-        parsingResult.push({
+        let noteInfo: note = {
           ...this.noteTemplate,
           stringValue: noteValue,
           interpretedValue: noteValue,
           raw: line,
           pos: { line: lineNum + 1, column: this.getBeginningWhitespace(line).length + this.noteStart.length + 1 },
           afterLinebreak
-        });
+        };
+        if (inList === true) {
+          currentList.interpretedValue.push(noteInfo);
+          currentList.raw += noteInfo.raw;
+          currentList.raw += afterLinebreak || '';
+          currentList.stringValue = currentList.raw;
+        } else {
+          parsingResult.push(noteInfo);
+        }
       } else if (this.isList(line)) {
         if (inList === true) {
           currentList.afterLinebreak = beforeLinebreak;
