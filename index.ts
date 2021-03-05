@@ -156,7 +156,7 @@ class RandomGenParser {
     let currentList: aboutList | null = this.listAtBeginning;
     let commenting: boolean = this.commentingAtBeginning;
     let pos: number = this.posAtBeginning;
-    let currentBlockComments: comment = Object.assign({}, this.defaultBlockComments);
+    let currentBlockComments: comment = { ...this.defaultBlockComments };
     let beforeLinebreak: afterLinebreak = null;
     splitted.forEach((line, lineNum) => {
       pos += line.length;
@@ -189,7 +189,7 @@ class RandomGenParser {
           } else {
             parsingResult.push(currentBlockComments);
           }
-          currentBlockComments = Object.assign({}, this.defaultBlockComments);
+          currentBlockComments = { ...this.defaultBlockComments };
         } else {
           currentBlockComments.stringValue += line;
           currentBlockComments.stringValue += afterLinebreak || '';
@@ -207,7 +207,7 @@ class RandomGenParser {
           parsingResult.push(currentList);
           currentList = null;
         }
-        parsingResult.push(Object.assign(this.newlineObject, { pos: { line: lineNum + 1, column: 0 }, afterLinebreak }));
+        parsingResult.push({ ...this.newlineObject, pos: { line: lineNum + 1, column: 0 }, afterLinebreak });
       } else if (this.isLineComment(line)) {
         let lineCommentValue: string = this.getLineCommentValue(line);
         let commentInfo: comment = {
