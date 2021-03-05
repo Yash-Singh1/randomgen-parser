@@ -238,7 +238,6 @@ class RandomGenParser {
         currentBlockComments.interpretedValue = currentBlockComments.stringValue;
         currentBlockComments.pos.line[0] = lineNum + 1;
       } else if (this.isSetting(line)) {
-        parsingResult.push({ ...this.getSetting(line, lineNum + 1), afterLinebreak });
         if (inList === true) {
           inList = false;
           currentList.afterLinebreak = beforeLinebreak;
@@ -246,6 +245,7 @@ class RandomGenParser {
           parsingResult.push(currentList);
           currentList = null;
         }
+        parsingResult.push({ ...this.getSetting(line, lineNum + 1), afterLinebreak });
       } else if (this.isNote(line)) {
         let noteValue: string = this.getNote(line);
         let noteInfo: note = {
