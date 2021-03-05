@@ -203,7 +203,7 @@ class RandomGenParser {
         if (inList === true) {
           inList = false;
           currentList.afterLinebreak = beforeLinebreak;
-          currentList.pos.line = [Number(currentList.pos.line), lineNum]
+          currentList.pos.line = [Number(currentList.pos.line), lineNum];
           parsingResult.push(currentList);
           currentList = null;
         }
@@ -242,7 +242,7 @@ class RandomGenParser {
         if (inList === true) {
           inList = false;
           currentList.afterLinebreak = beforeLinebreak;
-          currentList.pos.line = [Number(currentList.pos.line), lineNum]
+          currentList.pos.line = [Number(currentList.pos.line), lineNum];
           parsingResult.push(currentList);
           currentList = null;
         }
@@ -267,7 +267,7 @@ class RandomGenParser {
       } else if (this.isList(line)) {
         if (inList === true) {
           currentList.afterLinebreak = beforeLinebreak;
-          currentList.pos.line = [Number(currentList.pos.line), lineNum]
+          currentList.pos.line = [Number(currentList.pos.line), lineNum];
           parsingResult.push(currentList);
         }
         let listInfo = this.getList(line);
@@ -284,7 +284,7 @@ class RandomGenParser {
       if (lineNum + 1 === splitted.length && inList === true) {
         inList = false;
         currentList.afterLinebreak = beforeLinebreak;
-        currentList.pos.line = [Number(currentList.pos.line), lineNum]
+        currentList.pos.line = [Number(currentList.pos.line), lineNum];
         parsingResult.push(currentList);
         currentList = null;
       }
