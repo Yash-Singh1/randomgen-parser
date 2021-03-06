@@ -612,7 +612,7 @@ class RandomGenParser {
   private convertToStringOfAnElement(string: string, lineNum: number, column: number): stringOfAnElement {
     return { type: 'string', raw: string, stringValue: string, interpretedValue: string, pos: { line: lineNum, column } };
   }
-  private parseElement(line: string, lineNum: number, inObject: boolean = false, column: number = null): Omit<listElement, 'afterLinebreak'> {
+  private parseElement(line: string, lineNum: number, inObject: boolean = false, column: number = 1): Omit<listElement, 'afterLinebreak'> {
     let saved_line: string = line.slice();
     let chance: 'default' | number | undefined = !inObject ? 'default' : undefined;
     let attributes: Object | undefined = !inObject ? {} : undefined;
@@ -650,10 +650,10 @@ class RandomGenParser {
     let tokensSplit: Array<{ value: string; column: number }> = [];
     [...saved_line].forEach((char, index) => {
       if (((inObject ? '{}' : '') + this.referenceOpen + this.referenceClose + this.referenceOpen).includes(char)) {
-        tokensSplit.push({ value: char, column: index + 1 });
-        tokensSplit.push({ value: '', column: index + 2 });
+        tokensSplit.push({ value: char, column: column + index });
+        tokensSplit.push({ value: '', column: column + index + 1 });
       } else {
-        if (index === 0) tokensSplit.push({ value: '', column: 1 });
+        if (index === 0) tokensSplit.push({ value: '', column });
         tokensSplit[tokensSplit.length - 1].value += char;
       }
     });
@@ -771,7 +771,7 @@ class RandomGenParser {
       attributes,
       stringValue: line.trim(),
       interpretedValue,
-      pos: { line: lineNum, column: column }
+      pos: { line: lineNum, column }
     };
   }
 
