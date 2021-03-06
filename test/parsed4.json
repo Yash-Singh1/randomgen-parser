@@ -1,0 +1,213 @@
+[
+  {
+    "type": "setting",
+    "stringValue": "all roots",
+    "interpretedValue": true,
+    "raw": "  $all roots",
+    "settingType": "boolean",
+    "setting": "all roots",
+    "pos": { "line": 1, "column": 4 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 2, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "list",
+    "declarationString": "$stuff",
+    "raw": "$stuff\nthis {attribute:value}{50%} {a:b}\nis things underneath\n",
+    "stringValue": "$stuff\nthis {attribute:value}{50%} {a:b}\nis things underneath\n",
+    "name": "stuff",
+    "isRoot": false,
+    "isIncrementing": false,
+    "interpretedValue": [
+      {
+        "type": "element",
+        "raw": "this {attribute:value}{50%} {a:b}",
+        "chance": 50,
+        "attributes": {
+          "attribute": {
+            "type": "element",
+            "raw": "value",
+            "stringValue": "value",
+            "interpretedValue": [
+              {
+                "type": "string",
+                "raw": "value",
+                "stringValue": "value",
+                "interpretedValue": "value",
+                "pos": { "line": 4, "column": 16 }
+              }
+            ],
+            "pos": { "line": 4, "column": 16 }
+          },
+          "a": {
+            "type": "element",
+            "raw": "b",
+            "stringValue": "b",
+            "interpretedValue": [
+              {
+                "type": "string",
+                "raw": "b",
+                "stringValue": "b",
+                "interpretedValue": "b",
+                "pos": { "line": 4, "column": 31 }
+              }
+            ],
+            "pos": { "line": 4, "column": 31 }
+          }
+        },
+        "stringValue": "this {attribute:value}{50%} {a:b}",
+        "interpretedValue": [
+          {
+            "type": "string",
+            "raw": "this ",
+            "stringValue": "this ",
+            "interpretedValue": "this ",
+            "pos": { "line": 4, "column": 1 }
+          },
+          {
+            "type": "object",
+            "objectType": "attributes",
+            "stringValue": "attribute:value",
+            "interpretedValue": [
+              "attribute",
+              {
+                "type": "element",
+                "stringValue": "value",
+                "interpretedValue": [
+                  {
+                    "type": "string",
+                    "stringValue": "value",
+                    "interpretedValue": "value",
+                    "raw": "value",
+                    "pos": { "line": 4, "column": 17 }
+                  }
+                ],
+                "raw": "value",
+                "pos": { "line": 4, "column": 17 }
+              }
+            ],
+            "raw": "{attribute:value}",
+            "pos": { "line": 4, "column": 6 },
+            "spaceAfter": false
+          },
+          {
+            "type": "object",
+            "objectType": "chance",
+            "stringValue": "50%",
+            "interpretedValue": 50,
+            "raw": "{50%}",
+            "spaceAfter": true,
+            "pos": { "line": 4, "column": 23 }
+          },
+          {
+            "type": "object",
+            "objectType": "attributes",
+            "stringValue": "a:b",
+            "interpretedValue": [
+              "a",
+              {
+                "type": "element",
+                "stringValue": "b",
+                "interpretedValue": [
+                  {
+                    "type": "string",
+                    "stringValue": "b",
+                    "interpretedValue": "b",
+                    "raw": "b",
+                    "pos": { "line": 4, "column": 32 }
+                  }
+                ],
+                "raw": "b",
+                "pos": { "line": 4, "column": 32 }
+              }
+            ],
+            "raw": "{a:b}",
+            "spaceAfter": false,
+            "pos": { "line": 4, "column": 29 }
+          }
+        ],
+        "pos": { "line": 4, "column": 1 },
+        "afterLinebreak": "\n"
+      },
+      {
+        "type": "element",
+        "raw": "is things underneath",
+        "chance": "default",
+        "attributes": {},
+        "stringValue": "is things underneath",
+        "interpretedValue": [
+          {
+            "type": "string",
+            "raw": "is things underneath",
+            "stringValue": "is things underneath",
+            "interpretedValue": "is things underneath",
+            "pos": { "line": 5, "column": 1 }
+          }
+        ],
+        "pos": { "line": 5, "column": 1 },
+        "afterLinebreak": "\n"
+      }
+    ],
+    "afterLinebreak": "\n",
+    "pos": { "line": [3, 5], "column": 2 }
+  },
+  {
+    "type": "setting",
+    "stringValue": "force unique",
+    "interpretedValue": true,
+    "raw": " $force unique",
+    "settingType": "boolean",
+    "setting": "force unique",
+    "pos": { "line": 6, "column": 3 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 7, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 8, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 9, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 10, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "setting",
+    "stringValue": "allow duplicates",
+    "interpretedValue": true,
+    "raw": "$allow duplicates",
+    "settingType": "boolean",
+    "setting": "allow duplicates",
+    "pos": { "line": 11, "column": 2 },
+    "afterLinebreak": null
+  }
+]

@@ -1,0 +1,70 @@
+[
+  {
+    "type": "comment",
+    "commentType": "single-line",
+    "stringValue": " comment",
+    "interpretedValue": " comment",
+    "raw": "// comment",
+    "pos": { "line": 1, "column": 3 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "comment",
+    "commentType": "multi-line",
+    "raw": "/*Look at me\nI am a multi line comment\n*/",
+    "stringValue": "Look at me\nI am a multi line comment\n",
+    "interpretedValue": "Look at me\nI am a multi line comment\n",
+    "pos": { "line": [2, 4], "column": null },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "comment",
+    "commentType": "single-line",
+    "stringValue": " isn't that cool",
+    "interpretedValue": " isn't that cool",
+    "raw": "// isn't that cool",
+    "pos": { "line": 5, "column": 3 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 6, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "comment",
+    "commentType": "single-line",
+    "stringValue": " right?",
+    "interpretedValue": " right?",
+    "raw": " // right?",
+    "pos": { "line": 7, "column": 4 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 8, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "note",
+    "stringValue": "and more notes",
+    "interpretedValue": "and more notes",
+    "raw": "$[note] and more notes",
+    "pos": { "line": 9, "column": 9 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "note",
+    "stringValue": "more notes",
+    "interpretedValue": "more notes",
+    "raw": "  $[note] more notes",
+    "pos": { "line": 10, "column": 11 },
+    "afterLinebreak": null
+  }
+]

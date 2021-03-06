@@ -1,0 +1,10 @@
+// comment
+/*Look at me
+I am a multi line comment
+*/
+// isn't that cool
+
+ // right?
+
+$[note] and more notes
+  $[note] more notes

@@ -1,0 +1,8 @@
+$name : Generator
+$description : If you are reading this...please think again
+$author : Someone
+
+$list
+element1
+// now it gets a bit more complicated
+reference to another list -> [list2] this is the chance -> {40%}

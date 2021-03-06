@@ -1,0 +1,132 @@
+[
+  {
+    "type": "setting",
+    "stringValue": "Generator",
+    "interpretedValue": "Generator",
+    "raw": "$name : Generator",
+    "settingType": "string",
+    "setting": "name",
+    "pos": { "line": 1, "column": 9 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "setting",
+    "stringValue": "If you are reading this...please think again",
+    "interpretedValue": "If you are reading this...please think again",
+    "raw": "$description : If you are reading this...please think again",
+    "settingType": "string",
+    "setting": "description",
+    "pos": { "line": 2, "column": 16 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "setting",
+    "stringValue": "Someone",
+    "interpretedValue": "Someone",
+    "raw": "$author : Someone",
+    "settingType": "string",
+    "setting": "author",
+    "pos": { "line": 3, "column": 11 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 4, "column": 0 },
+    "afterLinebreak": "\n"
+  },
+  {
+    "type": "list",
+    "declarationString": "$list",
+    "raw": "$list\nelement1\n// now it gets a bit more complicated\nreference to another list -> [list2] this is the chance -> {40%}\n",
+    "stringValue": "$list\nelement1\n// now it gets a bit more complicated\nreference to another list -> [list2] this is the chance -> {40%}\n",
+    "name": "list",
+    "isRoot": false,
+    "isIncrementing": false,
+    "interpretedValue": [
+      {
+        "type": "element",
+        "raw": "element1",
+        "chance": "default",
+        "attributes": {},
+        "stringValue": "element1",
+        "interpretedValue": [
+          {
+            "type": "string",
+            "raw": "element1",
+            "stringValue": "element1",
+            "interpretedValue": "element1",
+            "pos": { "line": 6, "column": 1 }
+          }
+        ],
+        "pos": { "line": 6, "column": 1 },
+        "afterLinebreak": "\n"
+      },
+      {
+        "type": "comment",
+        "commentType": "single-line",
+        "stringValue": " now it gets a bit more complicated",
+        "interpretedValue": " now it gets a bit more complicated",
+        "raw": "// now it gets a bit more complicated",
+        "pos": { "line": 7, "column": 3 },
+        "afterLinebreak": "\n"
+      },
+      {
+        "type": "element",
+        "raw": "reference to another list -> [list2] this is the chance -> {40%}",
+        "chance": 40,
+        "attributes": {},
+        "stringValue": "reference to another list -> [list2] this is the chance -> {40%}",
+        "interpretedValue": [
+          {
+            "type": "string",
+            "raw": "reference to another list -> ",
+            "stringValue": "reference to another list -> ",
+            "interpretedValue": "reference to another list -> ",
+            "pos": { "line": 8, "column": 1 }
+          },
+          {
+            "type": "reference",
+            "referenceType": "variable",
+            "variableType": "list",
+            "stringValue": "list2",
+            "interpretedValue": "list2",
+            "raw": "[list2]",
+            "keywords": [],
+            "pos": { "line": 8, "column": 31 }
+          },
+          {
+            "type": "string",
+            "raw": " this is the chance -> ",
+            "stringValue": " this is the chance -> ",
+            "interpretedValue": " this is the chance -> ",
+            "pos": { "line": 8, "column": 37 }
+          },
+          {
+            "type": "object",
+            "objectType": "chance",
+            "stringValue": "40%",
+            "interpretedValue": 40,
+            "raw": "{40%}",
+            "spaceAfter": false,
+            "pos": { "line": 8, "column": 60 }
+          }
+        ],
+        "pos": { "line": 8, "column": 1 },
+        "afterLinebreak": "\n"
+      }
+    ],
+    "afterLinebreak": "\n",
+    "pos": { "line": [5, 8], "column": 2 }
+  },
+  {
+    "type": "newline",
+    "raw": "",
+    "stringValue": "",
+    "interpretedValue": "",
+    "pos": { "line": 9, "column": 0 },
+    "afterLinebreak": null
+  }
+]
