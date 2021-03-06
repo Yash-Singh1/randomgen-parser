@@ -78,8 +78,8 @@ interface listElement {
   stringValue: string;
   interpretedValue: Array<objectType | stringOfAnElement | referenceElement>;
   raw: string;
-  chance: 'default' | number;
-  attributes: Object;
+  chance?: 'default' | number;
+  attributes?: Object;
   afterLinebreak: afterLinebreak;
   pos: pos;
 }
@@ -764,7 +764,7 @@ class RandomGenParser {
         }
       }
     });
-    return {
+    let result: Omit<listElement, 'afterLinebreak'> = {
       type: 'element',
       raw: second_saved_line,
       chance,
@@ -773,6 +773,11 @@ class RandomGenParser {
       interpretedValue,
       pos: { line: lineNum, column }
     };
+    if (inObject) {
+      return result;
+    } else {
+      return { ...result, chance, attributes };
+    }
   }
 
   private referenceOpen: string = '[';
