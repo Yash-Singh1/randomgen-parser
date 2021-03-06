@@ -649,7 +649,7 @@ class RandomGenParser {
     let second_saved_line: string = saved_line.slice();
     let tokensSplit: Array<{ value: string; column: number }> = [];
     [...saved_line].forEach((char, index) => {
-      if (((inObject ? '{}' : '') + this.referenceOpen + this.referenceClose + this.referenceOpen).includes(char)) {
+      if (((!inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(char)) {
         tokensSplit.push({ value: char, column: column + index });
         tokensSplit.push({ value: '', column: column + index + 1 });
       } else {
