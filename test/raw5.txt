@@ -1,0 +1,2 @@
+$listStuff
+[hello|man [hello|bro|]|[]|[/][[abc]|]] {45.87%}

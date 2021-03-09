@@ -1,0 +1,194 @@
+[
+  {
+    "type": "list",
+    "declarationString": "$listStuff",
+    "raw": "$listStuff\n[hello|man [hello|bro|]|[]|[/][[abc]|]] {45.87%}",
+    "stringValue": "$listStuff\n[hello|man [hello|bro|]|[]|[/][[abc]|]] {45.87%}",
+    "name": "liststuff",
+    "isRoot": false,
+    "isIncrementing": false,
+    "interpretedValue": [
+      {
+        "type": "element",
+        "raw": "[hello|man [hello|bro|]|[]|[/][[abc]|]] {45.87%}",
+        "chance": 45.87,
+        "attributes": {},
+        "stringValue": "[hello|man [hello|bro|]|[]|[/][[abc]|]] {45.87%}",
+        "interpretedValue": [
+          {
+            "type": "reference",
+            "referenceType": "union",
+            "raw": "[hello|man [hello|bro|]|[]|[/][[abc]|]]",
+            "stringValue": "hello|man [hello|bro|]|[]|[/][[abc]|]",
+            "interpretedValue": [
+              [
+                {
+                  "type": "string",
+                  "raw": "hello",
+                  "stringValue": "hello",
+                  "interpretedValue": "hello",
+                  "pos": {
+                    "line": 2,
+                    "column": 2
+                  }
+                }
+              ],
+              [
+                {
+                  "type": "string",
+                  "raw": "man ",
+                  "stringValue": "man ",
+                  "interpretedValue": "man ",
+                  "pos": {
+                    "line": 2,
+                    "column": 8
+                  }
+                },
+                {
+                  "type": "reference",
+                  "referenceType": "union",
+                  "raw": "[hello|bro|]",
+                  "stringValue": "hello|bro|",
+                  "interpretedValue": [
+                    [
+                      {
+                        "type": "string",
+                        "raw": "hello",
+                        "stringValue": "hello",
+                        "interpretedValue": "hello",
+                        "pos": {
+                          "column": 13
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "type": "string",
+                        "raw": "bro",
+                        "stringValue": "bro",
+                        "interpretedValue": "bro",
+                        "pos": {
+                          "column": 19
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "type": "string",
+                        "raw": "",
+                        "stringValue": "",
+                        "interpretedValue": "",
+                        "pos": {
+                          "column": 22
+                        }
+                      }
+                    ]
+                  ],
+                  "pos": {
+                    "column": 13
+                  }
+                }
+              ],
+              [
+                {
+                  "type": "reference",
+                  "referenceType": "special",
+                  "stringValue": "",
+                  "interpretedValue": "",
+                  "raw": "[]",
+                  "pos": {
+                    "column": 25
+                  }
+                }
+              ],
+              [
+                {
+                  "type": "reference",
+                  "referenceType": "special",
+                  "stringValue": "/",
+                  "interpretedValue": "/",
+                  "raw": "[/]",
+                  "pos": {
+                    "column": 29
+                  }
+                },
+                {
+                  "type": "reference",
+                  "referenceType": "union",
+                  "raw": "[[abc]|]",
+                  "stringValue": "[abc]|",
+                  "interpretedValue": [
+                    [
+                      {
+                        "type": "reference",
+                        "referenceType": "variable",
+                        "variableType": "list",
+                        "stringValue": "abc",
+                        "interpretedValue": "abc",
+                        "raw": "[abc]",
+                        "keywords": [],
+                        "pos": {
+                          "column": 33
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "type": "string",
+                        "raw": "",
+                        "stringValue": "",
+                        "interpretedValue": "",
+                        "pos": {
+                          "column": 37
+                        }
+                      }
+                    ]
+                  ],
+                  "pos": {
+                    "column": 32
+                  }
+                }
+              ]
+            ],
+            "pos": {
+              "line": 2,
+              "column": 2
+            }
+          },
+          {
+            "type": "string",
+            "raw": " ",
+            "stringValue": " ",
+            "interpretedValue": " ",
+            "pos": {
+              "line": 2,
+              "column": 40
+            }
+          },
+          {
+            "type": "object",
+            "objectType": "chance",
+            "stringValue": "45.87%",
+            "interpretedValue": 45.87,
+            "raw": "{45.87%}",
+            "pos": {
+              "line": 2,
+              "column": 41
+            },
+            "spaceAfter": false
+          }
+        ],
+        "pos": {
+          "line": 2,
+          "column": 1
+        },
+        "afterLinebreak": null
+      }
+    ],
+    "afterLinebreak": null,
+    "pos": {
+      "line": [1, 1],
+      "column": 2
+    }
+  }
+]

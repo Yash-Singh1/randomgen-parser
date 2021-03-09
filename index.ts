@@ -83,15 +83,16 @@ interface listElement {
   afterLinebreak: afterLinebreak;
   pos: pos;
 }
+interface unionReference {
+  type: 'reference';
+  referenceType: 'union';
+  stringValue: string;
+  interpretedValue: Array<referenceElement | stringOfAnElement>;
+  raw: string;
+  pos: pos;
+}
 type referenceElement =
-  | {
-      type: 'reference';
-      referenceType: 'union';
-      stringValue: string;
-      interpretedValue: Array<referenceElement | stringOfAnElement>;
-      raw: string;
-      pos: pos;
-    }
+  | unionReference
   | {
       type: 'reference';
       referenceType: 'variable';
@@ -650,6 +651,7 @@ class RandomGenParser {
     let tokensSplit: Array<{ value: string; column: number }> = [];
     [...saved_line].forEach((char, index) => {
       if (((!inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(char)) {
+        if (tokensSplit.length > 0 && tokensSplit[tokensSplit.length - 1].value === '') tokensSplit.pop();
         tokensSplit.push({ value: char, column: column + index });
         tokensSplit.push({ value: '', column: column + index + 1 });
       } else {
@@ -791,6 +793,37 @@ class RandomGenParser {
       .map((referencePart) => referencePart.value)
       .join('');
     reference = reference.slice(1, -1);
+    reference = reference.reduce((acc, part) => {
+      if (part.value.includes(this.referenceOr)) {
+        let pushedAcc: Array<{ value: string; column: number }> = [];
+        [...part.value].forEach((char, charIndex) => {
+          if (char === '|') {
+            if ([this.referenceOpen, this.referenceOr].includes(reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 3])) {
+              pushedAcc.push({ value: '', column: part.column + charIndex });
+            }
+            pushedAcc.push({ value: char, column: part.column + charIndex });
+            if (reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 1] === this.referenceClose) {
+              pushedAcc.push({ value: '', column: part.column + charIndex });
+            }
+          } else if (pushedAcc.length > 0 && pushedAcc[pushedAcc.length - 1].value !== '|') {
+            pushedAcc[pushedAcc.length - 1].value += char;
+          } else {
+            pushedAcc.push({ value: char, column: part.column + charIndex });
+          }
+        });
+        acc = acc.concat(pushedAcc);
+      } else {
+        acc.push(part);
+      }
+      return acc;
+    }, []);
+    reference = reference.reduce((acc, part, partIndex) => {
+      acc.push(part);
+      if (part.value === this.referenceOpen && reference[partIndex + 1].value === this.referenceClose) {
+        acc.push({ value: '', column: part.column });
+      }
+      return acc;
+    }, []);
     if (reference.length === 1 && this.rangeReg.test(reference[0].value)) {
       let results = this.rangeReg.exec(reference[0].value);
       let start = parseInt(results[1]);
@@ -841,8 +874,8 @@ class RandomGenParser {
         if (
           acc.length > 0 &&
           Array.isArray(acc[acc.length - 1]) &&
-          acc[acc.length - 1].filter((char) => char === this.referenceOpen).length !==
-            acc[acc.length - 1].filter((char) => char === this.referenceClose).length
+          acc[acc.length - 1].filter((char) => char.value === this.referenceOpen).length !==
+            acc[acc.length - 1].filter((char) => char.value === this.referenceClose).length
         ) {
           acc[acc.length - 1].push(token);
         } else if (token.value === this.referenceOpen) {
@@ -852,25 +885,32 @@ class RandomGenParser {
         }
         return acc;
       }, []);
-      reference.filter((part) => part.value === this.referenceOr);
-      let result = {
+      let result: unionReference = {
         type: 'reference',
         referenceType: 'union',
         raw: saved_line,
         stringValue: saved_line.slice(1, -1),
-        interpretedValue: [],
+        interpretedValue: reference.reduce((acc, part, partIndex) => {
+          let infoAboutPart;
+          if (Array.isArray(part)) {
+            infoAboutPart = this.parseReference(part, part.column);
+          } else {
+            infoAboutPart = this.convertToStringOfAnElement(part.value, lineNum, part.column);
+          }
+          if (acc.length === 0 || reference[partIndex - 1].value === '|') {
+            acc.push([infoAboutPart]);
+          } else if (part.value === '|') {
+          } else {
+            acc[acc.length - 1].push(infoAboutPart);
+          }
+          return acc;
+        }, []),
         pos: {
           line: lineNum,
           column: cached_column
         }
       };
-      reference.forEach((part) => {
-        if (Array.isArray(part)) {
-          result.interpretedValue.push(this.parseReference(part, lineNum));
-        } else {
-          result.interpretedValue.push(this.convertToStringOfAnElement(part.value, lineNum, part.column));
-        }
-      });
+      return result;
     }
   }
 

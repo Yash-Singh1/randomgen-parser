@@ -83,15 +83,16 @@ interface listElement {
   afterLinebreak: afterLinebreak;
   pos: pos;
 }
+interface unionReference {
+  type: 'reference';
+  referenceType: 'union';
+  stringValue: string;
+  interpretedValue: Array<referenceElement | stringOfAnElement>;
+  raw: string;
+  pos: pos;
+}
 declare type referenceElement =
-  | {
-      type: 'reference';
-      referenceType: 'union';
-      stringValue: string;
-      interpretedValue: Array<referenceElement | stringOfAnElement>;
-      raw: string;
-      pos: pos;
-    }
+  | unionReference
   | {
       type: 'reference';
       referenceType: 'variable';
