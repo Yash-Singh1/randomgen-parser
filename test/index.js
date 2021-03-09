@@ -1,7 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const RandomGenParser = require('../index.js');
+const RandomGenParser = require('..');
 const ora = require('ora');
 
 const spinner1 = ora('Reading test files').start();
