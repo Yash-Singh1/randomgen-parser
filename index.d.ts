@@ -87,7 +87,7 @@ interface unionReference {
   type: 'reference';
   referenceType: 'union';
   stringValue: string;
-  interpretedValue: Array<referenceElement | stringOfAnElement>;
+  interpretedValue: Array<Array<referenceElement | stringOfAnElement>>;
   raw: string;
   pos: pos;
 }
