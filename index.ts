@@ -152,17 +152,17 @@ class RandomGenParser {
    */
   reparse({ linebreaks = 'lf' }: Config = {}): ParsingResult {
     let splitted: Array<string> = this.splitOnNewline(this.string, linebreaks);
-    let parsingResult: ParsingResult = this.resultAtBeginning;
-    let inList: boolean = this.inListAtBeginning;
-    let currentList: aboutList | null = this.listAtBeginning;
-    let commenting: boolean = this.commentingAtBeginning;
-    let pos: number = this.posAtBeginning;
-    let currentBlockComments: comment = { ...this.defaultBlockComments };
+    let parsingResult: ParsingResult = this.#resultAtBeginning;
+    let inList: boolean = this.#inListAtBeginning;
+    let currentList: aboutList | null = this.#listAtBeginning;
+    let commenting: boolean = this.#commentingAtBeginning;
+    let pos: number = this.#posAtBeginning;
+    let currentBlockComments: comment = { ...this.#defaultBlockComments };
     let beforeLinebreak: afterLinebreak = null;
     splitted.forEach((line, lineNum) => {
       pos += line.length;
       let afterLinebreak: afterLinebreak = (
-        Object.values(this.linebreakTypes)
+        Object.values(this.#linebreakTypes)
           .map((type) => {
             if (typeof type === 'string') {
               return { matches: this.string.slice(pos).startsWith(type), value: type };
@@ -180,7 +180,7 @@ class RandomGenParser {
         if (this.isBlockCommentEnd(line)) {
           commenting = false;
           currentBlockComments.raw += line;
-          currentBlockComments.stringValue += this.beginningWhitespace.exec(line)[0];
+          currentBlockComments.stringValue += this.#beginningWhitespace.exec(line)[0];
           currentBlockComments.interpretedValue = currentBlockComments.stringValue;
           currentBlockComments.afterLinebreak = afterLinebreak;
           currentBlockComments.pos.line[1] = lineNum + 1;
@@ -190,7 +190,7 @@ class RandomGenParser {
           } else {
             parsingResult.push(currentBlockComments);
           }
-          currentBlockComments = { ...this.defaultBlockComments };
+          currentBlockComments = { ...this.#defaultBlockComments };
         } else {
           currentBlockComments.stringValue += line;
           currentBlockComments.stringValue += afterLinebreak || '';
@@ -208,17 +208,17 @@ class RandomGenParser {
           parsingResult.push(currentList);
           currentList = null;
         }
-        parsingResult.push({ ...this.newlineObject, pos: { line: lineNum + 1, column: 0 }, afterLinebreak });
+        parsingResult.push({ ...this.#newlineObject, pos: { line: lineNum + 1, column: 0 }, afterLinebreak });
       } else if (this.isLineComment(line)) {
         let lineCommentValue: string = this.getLineCommentValue(line);
         let commentInfo: comment = {
-          ...this.singleLineCommentTemplate,
+          ...this.#singleLineCommentTemplate,
           stringValue: lineCommentValue,
           interpretedValue: lineCommentValue,
           raw: line,
           pos: {
             line: lineNum + 1,
-            column: this.getBeginningWhitespace(line).length + this.lineCommentStart.length + 1
+            column: this.getBeginningWhitespace(line).length + this.#lineCommentStart.length + 1
           },
           afterLinebreak
         };
@@ -250,11 +250,11 @@ class RandomGenParser {
       } else if (this.isNote(line)) {
         let noteValue: string = this.getNote(line);
         let noteInfo: note = {
-          ...this.noteTemplate,
+          ...this.#noteTemplate,
           stringValue: noteValue,
           interpretedValue: noteValue,
           raw: line,
-          pos: { line: lineNum + 1, column: this.getBeginningWhitespace(line).length + this.noteStart.length + 1 },
+          pos: { line: lineNum + 1, column: this.getBeginningWhitespace(line).length + this.#noteStart.length + 1 },
           afterLinebreak
         };
         if (inList === true) {
@@ -321,40 +321,40 @@ class RandomGenParser {
   }
 
   private getLineBreak(linebreakType: string): string {
-    return this.linebreakTypes[linebreakType.toLowerCase()];
+    return this.#linebreakTypes[linebreakType.toLowerCase()];
   }
 
-  private beginningWhitespace: RegExp = /^[\s\uFEFF\xA0]*/;
+  #beginningWhitespace: RegExp = /^[\s\uFEFF\xA0]*/;
   private getBeginningWhitespace(line: string) {
-    return this.beginningWhitespace.exec(line)[0];
+    return this.#beginningWhitespace.exec(line)[0];
   }
 
-  private lineCommentValueReg: RegExp = /^[\s\uFEFF\xA0]*\/\/(.*)$/;
+  #lineCommentValueReg: RegExp = /^[\s\uFEFF\xA0]*\/\/(.*)$/;
   private getLineCommentValue(line: string): string {
-    return this.lineCommentValueReg.exec(line)[1];
+    return this.#lineCommentValueReg.exec(line)[1];
   }
   private isLineComment(line: string): boolean {
-    return line.trim().startsWith(this.lineCommentStart);
+    return line.trim().startsWith(this.#lineCommentStart);
   }
 
-  private singleLineCommentTemplate: Pick<comment, 'type' | 'commentType'> = {
+  #singleLineCommentTemplate: Pick<comment, 'type' | 'commentType'> = {
     type: 'comment',
     commentType: 'single-line'
   };
 
   private isBlockCommentStart(line: string): boolean {
-    return line.trim().startsWith(this.blockCommentStart);
+    return line.trim().startsWith(this.#blockCommentStart);
   }
 
   private isBlockCommentEnd(line: string): boolean {
-    return line.trim().startsWith(this.blockCommentEnd);
+    return line.trim().startsWith(this.#blockCommentEnd);
   }
 
-  private lineCommentStart: string = '//';
-  private blockCommentStart: string = '/*';
-  private blockCommentEnd: string = '*/';
+  #lineCommentStart: string = '//';
+  #blockCommentStart: string = '/*';
+  #blockCommentEnd: string = '*/';
 
-  private defaultBlockComments: comment = {
+  #defaultBlockComments: comment = {
     type: 'comment',
     commentType: 'multi-line',
     raw: '',
@@ -367,13 +367,13 @@ class RandomGenParser {
     afterLinebreak: null
   };
 
-  private commentingAtBeginning: boolean = false;
-  private inListAtBeginning: boolean = false;
-  private listAtBeginning: aboutList | null = null;
-  private posAtBeginning: number = 0;
-  private resultAtBeginning: ParsingResult = [];
+  #commentingAtBeginning: boolean = false;
+  #inListAtBeginning: boolean = false;
+  #listAtBeginning: aboutList | null = null;
+  #posAtBeginning: number = 0;
+  #resultAtBeginning: ParsingResult = [];
 
-  private linebreakTypes = {
+  #linebreakTypes = {
     'crlf': '\r\n',
     'cr+lf': '\r\n',
     'lf': '\n',
@@ -381,83 +381,83 @@ class RandomGenParser {
     'auto': /\r\n|\r|\n/
   };
 
-  private newlineObject: Omit<newlineToken, 'afterLinebreak' | 'pos'> = {
+  #newlineObject: Omit<newlineToken, 'afterLinebreak' | 'pos'> = {
     type: 'newline',
     raw: '',
     stringValue: '',
     interpretedValue: ''
   };
 
-  private nameDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$name : (.*?)[\s\uFEFF\xA0]*$/i;
-  private nameDeclarationStart: string = '$name : ';
+  #nameDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$name : (.*?)[\s\uFEFF\xA0]*$/i;
+  #nameDeclarationStart: string = '$name : ';
   private isNameDeclaration(line: string): boolean {
-    return this.nameDeclarationRegexp.test(line);
+    return this.#nameDeclarationRegexp.test(line);
   }
   private getNameFromNameDeclaration(line: string): string {
-    return this.nameDeclarationRegexp.exec(line)[1];
+    return this.#nameDeclarationRegexp.exec(line)[1];
   }
 
-  private descriptionDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$description : (.*?)[\s\uFEFF\xA0]*$/i;
-  private descriptionDeclarationStart: string = '$description : ';
+  #descriptionDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$description : (.*?)[\s\uFEFF\xA0]*$/i;
+  #descriptionDeclarationStart: string = '$description : ';
   private isDescriptionDeclaration(line: string): boolean {
-    return this.descriptionDeclarationRegexp.test(line);
+    return this.#descriptionDeclarationRegexp.test(line);
   }
   private getDescriptionFromDescriptionDeclaration(line: string): string {
-    return this.descriptionDeclarationRegexp.exec(line)[1];
+    return this.#descriptionDeclarationRegexp.exec(line)[1];
   }
 
-  private authorDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$author : (.*?)[\s\uFEFF\xA0]*$/i;
-  private authorDeclarationStart: string = '$author : ';
+  #authorDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$author : (.*?)[\s\uFEFF\xA0]*$/i;
+  #authorDeclarationStart: string = '$author : ';
   private isAuthorDeclaration(line: string): boolean {
-    return this.authorDeclarationRegexp.test(line);
+    return this.#authorDeclarationRegexp.test(line);
   }
   private getAuthorFromAuthorDeclaration(line: string): string {
-    return this.authorDeclarationRegexp.exec(line)[1];
+    return this.#authorDeclarationRegexp.exec(line)[1];
   }
 
-  private buttonDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$button : (.*?)[\s\uFEFF\xA0]*$/i;
-  private buttonDeclarationStart: string = '$description : ';
+  #buttonDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$button : (.*?)[\s\uFEFF\xA0]*$/i;
+  #buttonDeclarationStart: string = '$description : ';
   private isButtonDeclaration(line: string): boolean {
-    return this.buttonDeclarationRegexp.test(line);
+    return this.#buttonDeclarationRegexp.test(line);
   }
   private getButtonTextFromButtonDeclaration(line: string): string {
-    return this.buttonDeclarationRegexp.exec(line)[1];
+    return this.#buttonDeclarationRegexp.exec(line)[1];
   }
 
-  private amountDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$amount : (.*?)[\s\uFEFF\xA0]*$/i;
-  private amountDeclarationStart: string = '$amount : ';
+  #amountDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$amount : (.*?)[\s\uFEFF\xA0]*$/i;
+  #amountDeclarationStart: string = '$amount : ';
   private isAmountDeclaration(line: string): boolean {
-    return this.amountDeclarationRegexp.test(line);
+    return this.#amountDeclarationRegexp.test(line);
   }
   private getAmountFromAmountDeclaration(line: string): string {
-    return this.amountDeclarationRegexp.exec(line)[1];
+    return this.#amountDeclarationRegexp.exec(line)[1];
   }
 
-  private pictureDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$picture : (.*?)[\s\uFEFF\xA0]*$/i;
-  private pictureDeclarationStart: string = '$picture : ';
+  #pictureDeclarationRegexp: RegExp = /^[\s\uFEFF\xA0]*\$picture : (.*?)[\s\uFEFF\xA0]*$/i;
+  #pictureDeclarationStart: string = '$picture : ';
   private isPictureDeclaration(line: string): boolean {
-    return this.pictureDeclarationRegexp.test(line);
+    return this.#pictureDeclarationRegexp.test(line);
   }
   private getPictureURLFromPictureDeclaration(line: string): string {
-    return this.pictureDeclarationRegexp.exec(line)[1];
+    return this.#pictureDeclarationRegexp.exec(line)[1];
   }
 
-  private includeRegexp: RegExp = /^[\s\uFEFF\xA0]*\$include (.*?)[\s\uFEFF\xA0]*$/i;
-  private includeDeclarationStart = '$include ';
+  #includeRegexp: RegExp = /^[\s\uFEFF\xA0]*\$include (.*?)[\s\uFEFF\xA0]*$/i;
+  #includeDeclarationStart = '$include ';
   private isIncludeDeclaration(line: string): boolean {
-    return this.includeRegexp.test(line);
+    return this.#includeRegexp.test(line);
   }
   private getURLFromIncludeDeclaration(line: string): string {
-    return this.includeRegexp.exec(line)[1];
+    return this.#includeRegexp.exec(line)[1];
   }
 
-  private booleanSettingRegexp: RegExp = /^[\s\uFEFF\xA0]*\$(all roots|allow duplicates|force unique|includes finalized)[\s\uFEFF\xA0]*$/i;
-  private booleanDeclarationStart: string = '$';
+  #booleanSettingRegexp: RegExp = /^[\s\uFEFF\xA0]*\$(all roots|allow duplicates|force unique|includes finalized)[\s\uFEFF\xA0]*$/i;
+  #booleanDeclarationStart: string = '$';
   private isBooleanSettingDeclaration(line: string): boolean {
-    return this.booleanSettingRegexp.test(line);
+    return this.#booleanSettingRegexp.test(line);
   }
   private getBooleanSetting(line: string): string {
-    return this.booleanSettingRegexp.exec(line)[1];
+    return this.#booleanSettingRegexp.exec(line)[1];
   }
 
   private isSetting(line: string): boolean {
@@ -482,22 +482,22 @@ class RandomGenParser {
       stringValue = this.getNameFromNameDeclaration(line);
       settingType = 'string';
       setting = 'name';
-      column += this.nameDeclarationStart.length;
+      column += this.#nameDeclarationStart.length;
     } else if (this.isDescriptionDeclaration(line)) {
       stringValue = this.getDescriptionFromDescriptionDeclaration(line);
       settingType = 'string';
       setting = 'description';
-      column += this.descriptionDeclarationStart.length;
+      column += this.#descriptionDeclarationStart.length;
     } else if (this.isAuthorDeclaration(line)) {
       stringValue = this.getAuthorFromAuthorDeclaration(line);
       settingType = 'string';
       setting = 'author';
-      column += this.authorDeclarationStart.length;
+      column += this.#authorDeclarationStart.length;
     } else if (this.isButtonDeclaration(line)) {
       stringValue = this.getButtonTextFromButtonDeclaration(line);
       settingType = 'string';
       setting = 'button';
-      column += this.buttonDeclarationStart.length;
+      column += this.#buttonDeclarationStart.length;
     } else if (this.isAmountDeclaration(line)) {
       stringValue = this.getAmountFromAmountDeclaration(line);
       let numberParsedValue: number = parseInt(stringValue);
@@ -508,23 +508,23 @@ class RandomGenParser {
       }
       settingType = 'number';
       setting = 'amount';
-      column += this.amountDeclarationStart.length;
+      column += this.#amountDeclarationStart.length;
     } else if (this.isPictureDeclaration(line)) {
       stringValue = this.getPictureURLFromPictureDeclaration(line);
       settingType = 'string';
       setting = 'picture';
-      column += this.pictureDeclarationStart.length;
+      column += this.#pictureDeclarationStart.length;
     } else if (this.isIncludeDeclaration(line)) {
       stringValue = this.getURLFromIncludeDeclaration(line);
       settingType = 'string';
       setting = 'include';
-      column += this.includeDeclarationStart.length;
+      column += this.#includeDeclarationStart.length;
     } else if (this.isBooleanSettingDeclaration(line)) {
       stringValue = this.getBooleanSetting(line);
       settingType = 'boolean';
       interpretedValue = true;
       setting = stringValue;
-      column += this.booleanDeclarationStart.length;
+      column += this.#booleanDeclarationStart.length;
     }
     column += 1;
     if (!interpretedValue) {
@@ -544,33 +544,33 @@ class RandomGenParser {
     };
   }
 
-  private noteStart: string = '$[note] ';
+  #noteStart: string = '$[note] ';
   private isNote(line: string): boolean {
-    return line.trimStart().startsWith(this.noteStart);
+    return line.trimStart().startsWith(this.#noteStart);
   }
   private getNote(line: string): string {
-    return line.trimStart().slice(this.noteStart.length);
+    return line.trimStart().slice(this.#noteStart.length);
   }
-  private noteTemplate: Pick<note, 'type'> = {
+  #noteTemplate: Pick<note, 'type'> = {
     type: 'note'
   };
 
-  private listStartCharacter: string = '$';
-  private listPushCharacter: string = '+';
-  private listRootCharacter: string = '>';
+  #listStartCharacter: string = '$';
+  #listPushCharacter: string = '+';
+  #listRootCharacter: string = '>';
   private isList(line: string): boolean {
-    return line.trim().startsWith(this.listStartCharacter);
+    return line.trim().startsWith(this.#listStartCharacter);
   }
   private getList(line: string): { column: number; listInfo: Omit<aboutList, 'pos'> } {
     let saved_line: string = line.slice();
     line = line.trim().slice(1);
     let isRoot: boolean = false;
     let isIncrementing: boolean = false;
-    if (line.includes(this.listRootCharacter)) {
+    if (line.includes(this.#listRootCharacter)) {
       isRoot = true;
-      line = line.replace(this.listRootCharacter, '');
+      line = line.replace(this.#listRootCharacter, '');
     }
-    if (line.startsWith(this.listPushCharacter)) {
+    if (line.startsWith(this.#listPushCharacter)) {
       isIncrementing = true;
       line = line.slice(1);
     }
@@ -591,22 +591,25 @@ class RandomGenParser {
     };
   }
 
-  private percentSign = '%';
-  private attributeSeperator = ':';
+  #percentSign = '%';
+  #attributeSeperator = ':';
   private isPercent(object: string) {
-    return !object.includes(':') && object.endsWith(this.percentSign);
+    return !object.includes(':') && object.endsWith(this.#percentSign);
   }
   private isAttribute(object: string) {
-    return object.includes(this.attributeSeperator);
+    return object.includes(this.#attributeSeperator);
   }
   private getKeyAndValue(object: string, lineNum: number, column: number): [string, Omit<listElement, 'afterLinebreak'>] {
     return [
-      object.split(this.attributeSeperator)[0],
+      object.split(this.#attributeSeperator)[0],
       this.parseElement(
-        object.split(this.attributeSeperator).slice(1).join(this.attributeSeperator),
+        object
+          .split(this.#attributeSeperator)
+          .slice(1)
+          .join(this.#attributeSeperator),
         lineNum,
         true,
-        column + object.split(this.attributeSeperator)[0].length + this.attributeSeperator.length
+        column + object.split(this.#attributeSeperator)[0].length + this.#attributeSeperator.length
       )
     ];
   }
@@ -618,7 +621,7 @@ class RandomGenParser {
     let chance: 'default' | number | undefined = !inObject ? 'default' : undefined;
     let attributes: Object | undefined = !inObject ? {} : undefined;
     line = line.trim();
-    if ((line.match(/\[/) || []).length !== (line.match(new RegExp(this.referenceClose)) || []).length) {
+    if ((line.match(/\[/) || []).length !== (line.match(new RegExp(this.#referenceClose)) || []).length) {
       throw new ParsingError('Unmatched square brackets found at line ' + lineNum);
     }
     if ((line.match(/{/) || []).length !== (line.match(/}/) || []).length && !inObject) {
@@ -650,7 +653,7 @@ class RandomGenParser {
     let second_saved_line: string = saved_line.slice();
     let tokensSplit: Array<{ value: string; column: number }> = [];
     [...saved_line].forEach((char, index) => {
-      if (((!inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(char)) {
+      if (((!inObject ? '{}' : '') + this.#referenceOpen + this.#referenceClose).includes(char)) {
         if (tokensSplit.length > 0 && tokensSplit[tokensSplit.length - 1].value === '') tokensSplit.pop();
         tokensSplit.push({ value: char, column: column + index });
         tokensSplit.push({ value: '', column: column + index + 1 });
@@ -686,11 +689,11 @@ class RandomGenParser {
       if (
         acc.length > 0 &&
         Array.isArray(acc[acc.length - 1]) &&
-        acc[acc.length - 1].filter((char) => char.value === this.referenceOpen).length !==
-          acc[acc.length - 1].filter((char) => char.value === this.referenceClose).length
+        acc[acc.length - 1].filter((char) => char.value === this.#referenceOpen).length !==
+          acc[acc.length - 1].filter((char) => char.value === this.#referenceClose).length
       ) {
         acc[acc.length - 1].push(token);
-      } else if (token.value === this.referenceOpen) {
+      } else if (token.value === this.#referenceOpen) {
         acc.push([token]);
       } else {
         acc.push(token);
@@ -698,20 +701,20 @@ class RandomGenParser {
       return acc;
     }, []);
     tokensSplit = tokensSplit.reduce((acc, token, tokenPos) => {
-      if (typeof token.value === 'string' && token.value !== this.referenceOr) {
+      if (typeof token.value === 'string' && token.value !== this.#referenceOr) {
         if (
           tokenPos !== tokensSplit.length - 1 &&
           typeof tokensSplit[tokenPos + 1].value === 'string' &&
-          tokensSplit[tokenPos + 1].value === this.referenceOr
+          tokensSplit[tokenPos + 1].value === this.#referenceOr
         ) {
-          token.value += this.referenceOr;
+          token.value += this.#referenceOr;
         }
-        if (tokenPos !== 0 && typeof tokensSplit[tokenPos - 1].value === 'string' && tokensSplit[tokenPos - 1].value === this.referenceOr) {
-          token.value = this.referenceOr + token.value;
+        if (tokenPos !== 0 && typeof tokensSplit[tokenPos - 1].value === 'string' && tokensSplit[tokenPos - 1].value === this.#referenceOr) {
+          token.value = this.#referenceOr + token.value;
           token.column -= 1;
         }
         acc.push(token);
-      } else if (token.value !== this.referenceOr) {
+      } else if (token.value !== this.#referenceOr) {
         acc.push(token);
       }
       return acc;
@@ -720,7 +723,7 @@ class RandomGenParser {
       if (typeof token === 'undefined') {
         return;
       }
-      if (typeof token.value === 'string' && !((inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(token.value)) {
+      if (typeof token.value === 'string' && !((inObject ? '{}' : '') + this.#referenceOpen + this.#referenceClose).includes(token.value)) {
         interpretedValue.push(this.convertToStringOfAnElement(token.value, lineNum, token.column));
       } else if (Array.isArray(token)) {
         if (!inObject && token[0].value === '{') {
@@ -761,7 +764,7 @@ class RandomGenParser {
           if (spaceAfter) {
             delete tokensSplit[tokenPos + 1];
           }
-        } else if (token[0].value === this.referenceOpen) {
+        } else if (token[0].value === this.#referenceOpen) {
           interpretedValue.push(this.parseReference(token, lineNum));
         }
       }
@@ -782,27 +785,27 @@ class RandomGenParser {
     }
   }
 
-  private referenceOpen: string = '[';
-  private referenceClose: string = ']';
-  private referenceOr: string = '|';
-  private referenceVar: string = '#';
-  private referenceKeywordSeperator: string = ',';
-  private rangeReg: RegExp = /(\d+)-(\d+)/;
+  #referenceOpen: string = '[';
+  #referenceClose: string = ']';
+  #referenceOr: string = '|';
+  #referenceVar: string = '#';
+  #referenceKeywordSeperator: string = ',';
+  #rangeReg: RegExp = /(\d+)-(\d+)/;
   private parseReference(reference: Array<{ value: string; column: number }>, lineNum: number): referenceElement {
     let saved_line: string = this.flatten(reference)
       .map((referencePart) => referencePart.value)
       .join('');
     reference = reference.slice(1, -1);
     reference = reference.reduce((acc, part) => {
-      if (part.value.includes(this.referenceOr)) {
+      if (part.value.includes(this.#referenceOr)) {
         let pushedAcc: Array<{ value: string; column: number }> = [];
         [...part.value].forEach((char, charIndex) => {
           if (char === '|') {
-            if ([this.referenceOpen, this.referenceOr].includes(reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 3])) {
+            if ([this.#referenceOpen, this.#referenceOr].includes(reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 3])) {
               pushedAcc.push({ value: '', column: part.column + charIndex });
             }
             pushedAcc.push({ value: char, column: part.column + charIndex });
-            if (reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 1] === this.referenceClose) {
+            if (reference.map((subpart) => subpart.value).join('')[part.column + charIndex - 1] === this.#referenceClose) {
               pushedAcc.push({ value: '', column: part.column + charIndex });
             }
           } else if (pushedAcc.length > 0 && pushedAcc[pushedAcc.length - 1].value !== '|') {
@@ -819,13 +822,13 @@ class RandomGenParser {
     }, []);
     reference = reference.reduce((acc, part, partIndex) => {
       acc.push(part);
-      if (part.value === this.referenceOpen && reference[partIndex + 1].value === this.referenceClose) {
+      if (part.value === this.#referenceOpen && reference[partIndex + 1].value === this.#referenceClose) {
         acc.push({ value: '', column: part.column });
       }
       return acc;
     }, []);
-    if (reference.length === 1 && this.rangeReg.test(reference[0].value)) {
-      let results = this.rangeReg.exec(reference[0].value);
+    if (reference.length === 1 && this.#rangeReg.test(reference[0].value)) {
+      let results = this.#rangeReg.exec(reference[0].value);
       let start = parseInt(results[1]);
       let end = parseInt(results[2]);
       if (isNaN(start) || isNaN(end)) {
@@ -858,27 +861,27 @@ class RandomGenParser {
       return {
         type: 'reference',
         referenceType: 'variable',
-        variableType: reference[0].value.startsWith(this.referenceVar) ? 'identifier' : 'list',
+        variableType: reference[0].value.startsWith(this.#referenceVar) ? 'identifier' : 'list',
         stringValue: reference[0].value,
         interpretedValue: reference[0].value,
         raw: saved_line,
-        keywords: reference[0].value.split(this.referenceKeywordSeperator).slice(1),
+        keywords: reference[0].value.split(this.#referenceKeywordSeperator).slice(1),
         pos: {
           line: lineNum,
           column: reference[0].column
         }
       };
-    } else if (reference.length !== 1 && reference.find((part) => part.value === this.referenceOr)) {
+    } else if (reference.length !== 1 && reference.find((part) => part.value === this.#referenceOr)) {
       let cached_column: number = Number(reference[0].column);
       reference = reference.reduce((acc, token) => {
         if (
           acc.length > 0 &&
           Array.isArray(acc[acc.length - 1]) &&
-          acc[acc.length - 1].filter((char) => char.value === this.referenceOpen).length !==
-            acc[acc.length - 1].filter((char) => char.value === this.referenceClose).length
+          acc[acc.length - 1].filter((char) => char.value === this.#referenceOpen).length !==
+            acc[acc.length - 1].filter((char) => char.value === this.#referenceClose).length
         ) {
           acc[acc.length - 1].push(token);
-        } else if (token.value === this.referenceOpen) {
+        } else if (token.value === this.#referenceOpen) {
           acc.push([token]);
         } else {
           acc.push(token);

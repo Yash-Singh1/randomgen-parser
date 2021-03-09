@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "build": "tsc index.ts --downlevelIteration && prettier --write .",
+    "build": "tsc index.ts --downlevelIteration --target es6 && prettier --write .",
     "test": "node test/index.js"
   },
   "keywords": [
