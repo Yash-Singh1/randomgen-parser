@@ -284,7 +284,7 @@ class RandomGenParser {
       }
       if (lineNum + 1 === splitted.length && inList === true) {
         inList = false;
-        currentList.afterLinebreak = beforeLinebreak;
+        currentList.afterLinebreak = null;
         currentList.pos.line = [Number(currentList.pos.line), lineNum];
         parsingResult.push(currentList);
         currentList = null;
