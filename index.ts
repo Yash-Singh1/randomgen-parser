@@ -594,6 +594,8 @@ class RandomGenParser {
 
   percentSign = '%';
   attributeSeperator = ':';
+  objectOpen = '{';
+  objectClose = '}';
   isPercent(object: string) {
     return !object.includes(':') && object.endsWith(this.percentSign);
   }
@@ -619,21 +621,21 @@ class RandomGenParser {
     let chance: 'default' | number | undefined = !inObject ? 'default' : undefined;
     let attributes: Object | undefined = !inObject ? {} : undefined;
     line = line.trim();
-    if ((line.match(/\[/) || []).length !== (line.match(new RegExp(this.referenceClose)) || []).length) {
+    if ((line.match(this.referenceOpen) || []).length !== (line.match(this.referenceClose) || []).length) {
       throw new ParsingError('Unmatched square brackets found at line ' + lineNum);
     }
-    if ((line.match(/{/) || []).length !== (line.match(/}/) || []).length && !inObject) {
+    if ((line.match(this.objectOpen) || []).length !== (line.match(this.objectClose) || []).length && !inObject) {
       throw new ParsingError('Unmatched curly braces found at line' + lineNum);
     }
-    if (line.includes('{') && !inObject) {
-      if (line.lastIndexOf('}') !== line.length - 1) {
+    if (line.includes(this.objectOpen) && !inObject) {
+      if (line.lastIndexOf(this.objectClose) !== line.length - 1) {
         throw new ParsingError('Closing brackets not found at end of line ' + lineNum);
       }
       let objects: Array<string> = line
-        .slice(line.indexOf('{') + 1, -1)
-        .replace('} {', '}{')
-        .split('}{');
-      if (objects.find((object) => object.includes('{') || object.includes('}'))) {
+        .slice(line.indexOf(this.objectOpen) + 1, -1)
+        .replace(this.objectClose + ' ' + this.objectOpen, this.objectClose + this.objectOpen)
+        .split(this.objectClose + this.objectOpen);
+      if (objects.find((object) => object.includes(this.objectOpen) || object.includes(this.objectClose))) {
         throw new ParsingError('Unknown characters between curly braces ending and starting ' + lineNum);
       }
       objects.forEach((object, objectNum) => {
@@ -643,7 +645,7 @@ class RandomGenParser {
             throw new ParsingError('Invalid percentage ' + object + ' at line ' + lineNum);
           }
         } else if (this.isAttribute(object)) {
-          let attributeParts = this.getKeyAndValue(object, lineNum, this.getPosition(saved_line, '{', objectNum + 1) + 1);
+          let attributeParts = this.getKeyAndValue(object, lineNum, this.getPosition(saved_line, this.objectOpen, objectNum + 1) + 1);
           attributes[attributeParts[0]] = attributeParts[1];
         }
       });
@@ -651,7 +653,7 @@ class RandomGenParser {
     let second_saved_line: string = saved_line.slice();
     let tokensSplit: Array<{ value: string; column: number }> = [];
     [...saved_line].forEach((char, index) => {
-      if (((!inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(char)) {
+      if (((!inObject ? this.objectOpen + this.objectClose : '') + this.referenceOpen + this.referenceClose).includes(char)) {
         if (tokensSplit.length > 0 && tokensSplit[tokensSplit.length - 1].value === '') tokensSplit.pop();
         tokensSplit.push({ value: char, column: column + index });
         tokensSplit.push({ value: '', column: column + index + 1 });
@@ -664,7 +666,7 @@ class RandomGenParser {
     if (
       !inObject &&
       tokensSplit
-        .filter((value) => '{}'.includes(value.value))
+        .filter((value) => (this.objectOpen + this.objectClose).includes(value.value))
         .map((bracketObj) => bracketObj.value)
         .find((bracket, bracketIndex, bracketArr) => bracketArr[bracketIndex + 1] === bracket)
     ) {
@@ -673,9 +675,9 @@ class RandomGenParser {
     let interpretedValue: Array<objectType | stringOfAnElement | referenceElement> = [];
     if (!inObject) {
       tokensSplit = tokensSplit.reduce((acc, token) => {
-        if (acc.length > 0 && Array.isArray(acc[acc.length - 1]) && acc[acc.length - 1][acc[acc.length - 1].length - 1].value !== '}') {
+        if (acc.length > 0 && Array.isArray(acc[acc.length - 1]) && acc[acc.length - 1][acc[acc.length - 1].length - 1].value !== this.objectClose) {
           acc[acc.length - 1].push(token);
-        } else if (token.value === '{') {
+        } else if (token.value === this.objectOpen) {
           acc.push([token]);
         } else {
           acc.push(token);
@@ -721,10 +723,13 @@ class RandomGenParser {
       if (typeof token === 'undefined') {
         return;
       }
-      if (typeof token.value === 'string' && !((inObject ? '{}' : '') + this.referenceOpen + this.referenceClose).includes(token.value)) {
+      if (
+        typeof token.value === 'string' &&
+        !((inObject ? this.objectOpen + this.objectClose : '') + this.referenceOpen + this.referenceClose).includes(token.value)
+      ) {
         interpretedValue.push(this.convertToStringOfAnElement(token.value, lineNum, token.column));
       } else if (Array.isArray(token)) {
-        if (!inObject && token[0].value === '{') {
+        if (!inObject && token[0].value === this.objectOpen) {
           let spaceAfter: boolean =
             tokenPos + 1 !== tokensSplit.length && !Array.isArray(tokensSplit[tokenPos + 1]) && tokensSplit[tokenPos + 1].value === ' ';
           if (this.isPercent(token[1].value)) {
