@@ -317,6 +317,21 @@ class RandomGenParser {
     return arr;
   }
 
+  occurrencesInString(string: string, target: string) {
+    let pos: number = 0;
+    let occurrences: number = 0;
+    while (true) {
+      let index: number = string.indexOf(target, pos);
+      if (index === -1) {
+        break;
+      } else {
+        pos = index + 1;
+        occurrences++;
+      }
+    }
+    return occurrences;
+  }
+
   splitOnNewline(string: string, linebreakType: string): Array<string> {
     return string.split(this.getLineBreak(linebreakType));
   }
@@ -621,10 +636,10 @@ class RandomGenParser {
     let chance: 'default' | number | undefined = !inObject ? 'default' : undefined;
     let attributes: Object | undefined = !inObject ? {} : undefined;
     line = line.trim();
-    if ((line.match(this.referenceOpen) || []).length !== (line.match(this.referenceClose) || []).length) {
+    if (this.occurrencesInString(line, this.referenceOpen) !== this.occurrencesInString(line, this.referenceClose)) {
       throw new ParsingError('Unmatched square brackets found at line ' + lineNum);
     }
-    if ((line.match(this.objectOpen) || []).length !== (line.match(this.objectClose) || []).length && !inObject) {
+    if (this.occurrencesInString(line, this.objectOpen) !== this.occurrencesInString(line, this.objectClose) && !inObject) {
       throw new ParsingError('Unmatched curly braces found at line' + lineNum);
     }
     if (line.includes(this.objectOpen) && !inObject) {
