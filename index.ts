@@ -2,7 +2,6 @@ type Config = {
   linebreaks?: string;
   plugins?: Object | Array<Object>;
 };
-type Class = new (...args: any[]) => any;
 type settingType = 'string' | 'number' | 'boolean';
 type afterLinebreak = string | null;
 type part = aboutList | setting | note | newlineToken | comment | listElement;
@@ -120,18 +119,14 @@ type referenceElement =
       raw: string;
       pos: pos;
     };
-
-function ParsingError(message) {
-  this.name = 'ParsingError';
-  this.message = message;
-  this.randomgen = true;
-  if (Error.captureStackTrace) {
-    Error.captureStackTrace(this, ParsingError);
+class ParsingError extends Error {
+  name: string;
+  message: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'ParsingError';
   }
 }
-
-ParsingError.prototype = Error.prototype;
-
 class RandomGenParser {
   string: string;
   parsed: ParsingResult;
