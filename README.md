@@ -42,6 +42,19 @@ Here is the format of the config:
 
 For more information on the functions given and the types, look at the [types](index.d.ts).
 
+### Extending
+
+The `randomgen-parser` module allows to extend and create plugins for it. An example plugin that would use `#` instead of `//` for line comments is:
+
+```js
+module.exports = {
+  lineCommentStart: '#',
+  lineCommentValueReg: /^[\s\uFEFF\xA0]*#(.*)$/
+};
+```
+
+The exported object must contain properties that are intended to be edited of the class.
+
 ## Development
 
 Run the following to convert typescript to javascript:
