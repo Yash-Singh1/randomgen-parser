@@ -6,7 +6,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc index.ts --downlevelIteration --target es6 && prettier --write .",
-    "test": "node test/index.js"
+    "test": "node test/index.mjs"
   },
   "keywords": [
     "randomgen",
