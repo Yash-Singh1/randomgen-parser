@@ -6,7 +6,7 @@
   "scripts": {
     "prepublishOnly": "npm run build",
     "build": "tsc index.ts --downlevelIteration --target es6 && prettier --write .",
-    "test": "node test/index.js"
+    "test": "node test/index.mjs"
   },
   "keywords": [
     "randomgen",
@@ -16,7 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.0.0",
-    "ora": "^5.3.0",
+    "ora": "^6.0.0",
     "prettier": "^2.2.1"
   },
   "homepage": "https://github.com/Yash-Singh1/randomgen-parser#readme",

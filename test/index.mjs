@@ -1,8 +1,8 @@
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const RandomGenParser = require('..');
-const ora = require('ora');
+import assert from 'assert';
+import fs from 'fs';
+import path from 'path';
+import RandomGenParser from '../index.js';
+import ora from 'ora';
 
 const spinner1 = ora('Reading test files').start();
 const files = fs
