@@ -809,6 +809,7 @@ class RandomGenParser {
   referenceVar: string = '#';
   referenceKeywordSeperator: string = ',';
   rangeReg: RegExp = /(\d+)-(\d+)/;
+  specialReferences: Array<string> = ['an', 's', 'seed', '', '/', ' ', '', "author's name", "game's name", '*CLEAR*', '*DEBUG ON*', '*DEBUG OFF*'];
   parseReference(reference: Array<{ value: string; column: number }>, lineNum: number): referenceElement {
     let saved_line: string = this.flatten(reference)
       .map((referencePart) => referencePart.value)
@@ -863,7 +864,7 @@ class RandomGenParser {
           column: reference[0].column
         }
       };
-    } else if (reference.length === 1 && ['an', 's', 'seed', '', '/', ' '].includes(reference[0].value)) {
+    } else if (reference.length === 1 && this.specialReferences.includes(reference[0].value)) {
       return {
         type: 'reference',
         referenceType: 'special',
