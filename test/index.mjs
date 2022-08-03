@@ -24,6 +24,7 @@ const files = fs
     }
     return acc;
   }, []);
+
 try {
   assert.strictEqual(
     files.every((file) => file.parsed && file.raw),
@@ -56,6 +57,7 @@ try {
   console.log();
   throw e;
 }
+
 spinner1.succeed('Reading test files');
 
 const spinner2 = ora('Running tests').start();
