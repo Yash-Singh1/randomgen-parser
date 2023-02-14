@@ -1,6 +1,6 @@
 # `randomgen-parser`
 
-Parses RandomGen
+Parses [RandomGen](http://orteil.dashnet.org/randomgen/).
 
 ## Installation
 
