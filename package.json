@@ -15,7 +15,7 @@
   "author": "Yash Singh",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^18.0.0",
+    "@types/node": "^20.1.2",
     "ora": "^6.0.0",
     "prettier": "^2.2.1"
   },
